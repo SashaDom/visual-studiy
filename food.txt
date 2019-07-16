@@ -1,0 +1,120 @@
+#include "pch.h"
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+//Шаблон декоратор (обертка)
+
+//1. Выделить общий интерфейс
+//---------------------------
+class Food {
+public:
+	virtual string getName() = 0;
+	virtual double getPrice() = 0;
+};
+
+class TestPizza : public Food{
+public:
+	string getName()override {
+		return "";
+	}
+	double getPrice()override {
+		return 0;
+	}
+};
+
+//2. Должен реализовать общий интрефейс
+//-------------------------------------
+class Pizza : public Food {
+public:
+	string getName()override {
+		return "pizza";
+	}
+	double getPrice()override {
+		return 99.97;
+	}
+};
+
+//3. Декоратор
+//------------
+class CheeseWrapper : public Food {
+protected:
+	//храним то что оборачиваем
+	Food * food;
+public:
+	//через констуктор вставляем указатель на объект который оборачиваем
+	CheeseWrapper(Food * food) :Food() {
+		this->food = food;
+	}
+	~CheeseWrapper() {
+		delete this->food;
+	}
+	string getName()override {
+		return food->getName() + " с сыром";
+	}
+	double getPrice()override {
+		return food->getPrice() + 5.45;
+	}
+};
+
+class DynamicFoodWrapper : public Food {
+protected:
+	//храним то что оборачиваем
+	Food * food;
+	string name;
+	double price;
+public:
+	//через констуктор вставляем указатель на объект который оборачиваем
+	DynamicFoodWrapper(Food * food, string name, double price) :Food() {
+		this->food = food;
+		this->name = name;
+		this->price = price;
+	}
+	~DynamicFoodWrapper() {
+		delete this->food;
+	}
+	string getName()override {
+		return food->getName() + " " + this->name;
+	}
+	double getPrice()override {
+		return food->getPrice() + this->price;
+	}
+};
+
+
+//Пицца с грибами
+//Пицца с кАлбасой
+//Пицца с сыром
+
+//Пицца с кАлбасой с грибами
+//Пицца с сыром с грибами
+//Пицца с сыром с кАлбасой
+
+int main()
+{
+	setlocale(LC_ALL, "Russian");
+	/*Food * pizza = new CheeseWrapper(new DynamicFoodWrapper(new Pizza(), "c калбасой", 7.62));
+	cout << pizza->getName() << endl;
+	cout << "Price: " << pizza->getPrice() << endl;*/
+	
+	Food * pizza = (new DynamicFoodWrapper(new TestPizza(), "c калбасой", 7.62));
+
+	if (pizza->getName() == " c калбасой") {
+		cout << "getName() .... OK" << endl;
+	}
+	else {
+		cout << "getName() .... ERROR" << pizza->getName() << endl;
+	}
+
+	if (pizza->getPrice() == 7.62) {
+		cout << "getPrice() .... OK" << endl;
+	}
+	else {
+		cout << "getPrice() .... ERROR " << pizza->getPrice() << endl;
+	}
+
+	delete pizza;
+
+
+}
