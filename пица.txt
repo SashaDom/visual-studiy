@@ -1,0 +1,106 @@
+#include<iostream>
+#include<windows.h>
+#include<string>
+#include<vector>
+#include<time.h>
+
+enum Direction { Up = 72, Left = 75, Right = 77, Down = 80, Enter = 13, escep = 27 };
+HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);//получает дискриптор активного окна
+
+enum Color
+{
+	Black = 0, Blue, Green, Cyan, Red, Magenta, Brown, LightGray, DarkGray, LightBlue, LightGreen, LighCyan, LightRed, LightMagenta, Yellow, White
+};
+void setColor(Color text, Color background)
+{
+	SetConsoleTextAttribute(hStdOut, (WORD)((background << 4) | text));
+}
+
+using namespace std;
+
+class Food
+{
+
+public:
+	virtual string getName() = 0;
+	virtual double getPrice() = 0;
+};
+class Pizza:public Food 
+{
+public:
+	string getName()
+	{
+		return "pizza";
+	}
+	double getPrice()
+	{
+		return 95.25;
+	}
+	/*Pizza()
+	{
+		string name = "пица";
+		double pris = 99.25;
+	}
+	Pizza(string name, double pris)
+	{
+		this->name = name;
+		this->pris = pris;
+	}
+
+	void setName(string n)
+	{
+		this->name = n;
+	}
+	string getName()
+	{
+		return name;
+	}
+	void showPizza()
+	{
+		cout << "pizza = " << getName() << "\n";
+	}*/
+};
+class DinamicFood:public Food
+{
+	string name;
+	double price;
+	Food*food;
+public:
+	DinamicFood(Food*food,string name,double prise)
+	{
+		this->food = food;
+		this->name = name;
+		this->price = prise;
+	}
+	~DinamicFood()
+	{
+		delete this->food;
+	}
+	string getName()
+	{
+		return food->getName() + " " + this->name;
+	}
+	double getPrice()
+	{
+		return food->getPrice() + this->price;
+	}
+};
+class CheesePizza
+{
+public:
+
+};
+void main()
+{
+	SetConsoleOutputCP(1251);
+	SetConsoleCP(1251);
+	srand(time(NULL));
+	Food * pizza = new DinamicFood(new Pizza(),"c калбасой ", 5.5);
+	//Food * pizza;
+	cout << pizza->getName() << "\n";
+	cout << "Price: " << pizza->getPrice() << "\n";
+	//Pizza a;
+	//a.showPizza();
+
+	system("pause");
+}
