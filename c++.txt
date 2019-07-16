@@ -1,0 +1,12 @@
+ios_base::in	открыть файл для чтения
+ios_base::out	открыть файл для записи
+ios_base::ate	при открытии переместить указатель в конец файла
+ios_base::app	открыть файл для записи в конец файла
+ios_base::trunc	удалить содержимое файла, если он существует
+ios_base::binary	открытие файла в двоичном режиме
+
+void write(std::string URL, std::string data) {
+		std::ofstream file(URL, std::ios_base::app); //oaeeiaue iioie auaiaa
+		file << data << "\n";//caienu a oaee - iioie
+		file.close();
+	}
